@@ -25,14 +25,22 @@ public class String_Calculator_TDD_Kata {
     }
 
     static int add(String numbers) {
-        // Conditions
+        // Conditions of prechecking
+        if (numbers.isEmpty()) {
+            return 0;
+        }
+        if (numbers.contains("-")) {
+            throw new IllegalArgumentException("Negatives not allowed");
+        }
+
+        // Logic
         String delimiter = configureDelimiter(numbers);
         if (delimiter != ",") {
-
             numbers = numbers.substring(3, numbers.length());
         }
         String[] preNumbersArray = numberSpliter(numbers, delimiter);
         int[] numbersArray = Arrays.stream(preNumbersArray).mapToInt(Integer::parseInt).toArray();
+
         return Arrays.stream(numbersArray).sum();
     }
 
@@ -49,9 +57,6 @@ public class String_Calculator_TDD_Kata {
         String[] redifinedNumbers = new String[] {};
 
         try {
-            if (numbers.length() == 0) {
-                return new String[] {};
-            }
             // This is the condition for new line
             if (numbers.contains("n")) {
                 if (numbers.charAt(numbers.length() - 1) == 'n') {
@@ -80,10 +85,4 @@ public class String_Calculator_TDD_Kata {
 
     }
 
-}
-
-class InputException extends Exception {
-    public InputException(String message) {
-        super(message);
-    }
 }
