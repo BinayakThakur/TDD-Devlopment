@@ -26,28 +26,21 @@ public class String_Calculator_TDD_Kata {
 
     static int add(String numbers) {
         // Conditions of prechecking
-        if (numbers.isEmpty()) {
-            return 0;
-        }
-        if (numbers.contains("-")) {
-            throw new IllegalArgumentException("Negatives not allowed");
-        }
+        String delimiter = configureDelimiter(numbers);
+        numbers = prebake(numbers, delimiter);
+        String[] preNumbersArray = numberSpliter(numbers, delimiter);
+        checkNegative(preNumbersArray);
 
         // Logic
-        String delimiter = configureDelimiter(numbers);
-        if (delimiter != ",") {
-            numbers = numbers.substring(3, numbers.length());
-        }
-        String[] preNumbersArray = numberSpliter(numbers, delimiter);
-        int[] numbersArray = Arrays.stream(preNumbersArray).mapToInt(Integer::parseInt).toArray();
 
+        int[] numbersArray = Arrays.stream(preNumbersArray).mapToInt(Integer::parseInt).toArray();
         return Arrays.stream(numbersArray).sum();
     }
 
     static String configureDelimiter(String x) {
         String delimiter = ",";
         if (x.startsWith("//")) {
-            delimiter = x.substring(2, 3);
+            delimiter = x.charAt(2) + "";
 
         }
         return delimiter;
@@ -55,33 +48,59 @@ public class String_Calculator_TDD_Kata {
 
     static String[] numberSpliter(String numbers, String delimiter) {
         String[] redifinedNumbers = new String[] {};
-
+        // Handling meta characters
         try {
-            // This is the condition for new line
-            if (numbers.contains("n")) {
-                if (numbers.charAt(numbers.length() - 1) == 'n') {
-                    System.out.println("Wrong Input");
-                    return new String[] {};
-                }
-                numbers = numbers.replaceAll("n", "");
 
-                numbers = numbers.replaceAll("\\\\", delimiter);
+            redifinedNumbers = Arrays.stream(numbers.split(delimiter))
+                    .filter(x -> x.equals("") == false)
+                    .filter(x -> x.contains("//") == false)
+                    .toArray(String[]::new);
 
-            }
-            // Handling meta characters
-            try {
-                redifinedNumbers = numbers.split(delimiter);
-
-            } catch (Exception e) {
-                redifinedNumbers = numbers.split("\\" + delimiter);
-
-            }
         } catch (Exception e) {
-            // Conditions
-            // New Line Condition
-
+            redifinedNumbers = numbers.split("\\" + delimiter);
+            redifinedNumbers = Arrays.stream(redifinedNumbers).filter(x -> x.equals("") == false)
+                    .toArray(String[]::new);
         }
         return redifinedNumbers;
+
+    }
+
+    static void checkNegative(String[] numbersArray) {
+        String negativeNumbers = "";
+        for (String number : numbersArray) {
+            if (Integer.parseInt(number) < 0) {
+                negativeNumbers += number + ",";
+            }
+        }
+        if (negativeNumbers.equals("")) {
+            return;
+        }
+        throw new IllegalArgumentException(
+                "negatives not allowed: " + negativeNumbers.substring(0, negativeNumbers.length() - 1));
+    }
+
+    static String prebake(String numbers, String delimiter) {
+        if (numbers.isEmpty()) {
+            return "0";
+        }
+
+        if (numbers.contains("n")) {
+            if (numbers.charAt(numbers.length() - 1) == 'n') {
+                System.out.println("Wrong Input");
+                return "0";
+            }
+            numbers = numbers.replaceAll("n", "");
+
+            numbers = numbers.replaceAll("\\\\", delimiter);
+
+        }
+        if (numbers.contains("\\\n")) {
+            numbers = numbers.replaceAll("\\\n", delimiter);
+        }
+        if (numbers.startsWith("//")) {
+            numbers = numbers.substring(2);
+        }
+        return numbers;
 
     }
 
