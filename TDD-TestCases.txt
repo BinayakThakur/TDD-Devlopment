@@ -12,6 +12,10 @@ The method can take up to two numbers, separated by commas, and will return thei
 "1,2,3,4"
 
 2) Handling New Line
+***************************************
+"1\n
+2,3,4"
+
 
 3) Changing delimiter
 
