@@ -26,10 +26,23 @@ public class String_Calculator_TDD_Kata {
 
     static int add(String numbers) {
         // Conditions
-        String delimiter = ",";
+        String delimiter = configureDelimiter(numbers);
+        if (delimiter != ",") {
+
+            numbers = numbers.substring(3, numbers.length());
+        }
         String[] preNumbersArray = numberSpliter(numbers, delimiter);
         int[] numbersArray = Arrays.stream(preNumbersArray).mapToInt(Integer::parseInt).toArray();
         return Arrays.stream(numbersArray).sum();
+    }
+
+    static String configureDelimiter(String x) {
+        String delimiter = ",";
+        if (x.startsWith("//")) {
+            delimiter = x.substring(2, 3);
+
+        }
+        return delimiter;
     }
 
     static String[] numberSpliter(String numbers, String delimiter) {
@@ -47,11 +60,17 @@ public class String_Calculator_TDD_Kata {
                 }
                 numbers = numbers.replaceAll("n", "");
 
-                numbers = numbers.replaceAll("\\\\", ",");
+                numbers = numbers.replaceAll("\\\\", delimiter);
 
             }
+            // Handling meta characters
+            try {
+                redifinedNumbers = numbers.split(delimiter);
 
-            redifinedNumbers = numbers.split(delimiter);
+            } catch (Exception e) {
+                redifinedNumbers = numbers.split("\\" + delimiter);
+
+            }
         } catch (Exception e) {
             // Conditions
             // New Line Condition

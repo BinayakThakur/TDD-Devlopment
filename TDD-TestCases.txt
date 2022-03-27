@@ -4,25 +4,10 @@ int Add(string numbers)
 The method can take up to two numbers, separated by commas, and will return their sum.
 
 1) Handling delimiter
-*********************************************************
-"1,2"
-",,"
-","
-""
-"1,2,3,4"
 
 2) Handling New Line
-***************************************
-"1\n
-2,3,4"
-
 
 3) Changing delimiter
 
 4) Handling negatives
 
-5) Handing Unexpected
-
-6) Ignoring Numbers
-
-7) Handling multiple delimiter
