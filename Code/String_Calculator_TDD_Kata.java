@@ -8,7 +8,7 @@ public class String_Calculator_TDD_Kata {
         // Condition holds true till
         // there is character in a string
         try {
-            File file = new File("cases.txt");
+            File file = new File("Inputs.txt");
             BufferedReader br = new BufferedReader(new FileReader(file));
             String st;
 
@@ -26,15 +26,20 @@ public class String_Calculator_TDD_Kata {
 
     static int add(String numbers) {
         // Conditions of prechecking
+
         String delimiter = configureDelimiter(numbers);
         numbers = prebake(numbers, delimiter);
         String[] preNumbersArray = numberSpliter(numbers, delimiter);
         checkNegative(preNumbersArray);
 
         // Logic
-
-        int[] numbersArray = Arrays.stream(preNumbersArray).mapToInt(Integer::parseInt).toArray();
-        return Arrays.stream(numbersArray).sum();
+        try {
+            int[] numbersArray = Arrays.stream(preNumbersArray).mapToInt(Integer::parseInt).toArray();
+            return Arrays.stream(numbersArray).sum();
+        } catch (Exception e) {
+            System.out.println("Error: " + "Wrong Input");
+            return 0;
+        }
     }
 
     static String configureDelimiter(String x) {
@@ -68,8 +73,13 @@ public class String_Calculator_TDD_Kata {
     static void checkNegative(String[] numbersArray) {
         String negativeNumbers = "";
         for (String number : numbersArray) {
-            if (Integer.parseInt(number) < 0) {
-                negativeNumbers += number + ",";
+            try {
+                if (Integer.parseInt(number) < 0) {
+                    negativeNumbers += number + ",";
+                }
+            } catch (Exception e) {
+                throw new IllegalArgumentException(
+                        "Wrong Input");
             }
         }
         if (negativeNumbers.equals("")) {
